@@ -55,32 +55,39 @@
   function  searchItem(){
     var movieName=document.getElementById('searchBox').value
     if(movieName==''){
-        alert('Enter Movie Name')
-        const container =document.getElementById('container')
-        container.innerHTML=""
+        alert('Enter Movie Name')        
+        return 
     }
     getMovieDetails(movieName)
   }
 
   function getMovieDetails(movieName){
+    event.preventDefault()
     fetch(`http://www.omdbapi.com/?i=tt3896198&apikey=92daab5d&t=${movieName}`)
     .then(function(response){
         return response.json()
     })
     .then(function(response){
         displayMovie(response)
-        return
     })
     .catch(function(error){
-        alert('Enter Valid Movie')
+
     })
   }
 
   function displayMovie(data){
+      console.log(data)
       const container =document.getElementById('container')
         container.innerHTML=""
 
-        var div1=document.createElement('div')
+        if(data.Title==undefined){
+            alert("Enter a valid movie")
+            let h1 = document.createElement('h1');
+            h1.textContent="Enter a valid Movie"
+            container.append(h1)
+        }
+        else{
+            var div1=document.createElement('div')
         var img=document.createElement('img')
         img.src=data.Poster
         div1.append(img)
@@ -112,10 +119,15 @@
 
       container.append(div1,div2)
       container.style.display='flex'
+    
+        }
+            
+
       document.getElementById('searchBox').value=''
   }
 
-  //document.getElementById('searchBox').value='Enter the movie'
+
+
  </script>
 </body>
 </html>
