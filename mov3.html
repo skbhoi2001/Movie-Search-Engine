@@ -9,7 +9,7 @@
 <style>
 #form{
     padding-top: 100px;
-    width: 50%;
+    width: 60%;
     margin: auto;
 }
 #searchBox{
@@ -55,32 +55,81 @@
   function  searchItem(){
     var movieName=document.getElementById('searchBox').value
     if(movieName==''){
-        alert('Enter Movie Name')
-        const container =document.getElementById('container')
-        container.innerHTML=""
+        alert('Enter Movie Name')        
+        return 
     }
     getMovieDetails(movieName)
   }
 
   function getMovieDetails(movieName){
+    event.preventDefault()
     fetch(`http://www.omdbapi.com/?i=tt3896198&apikey=92daab5d&t=${movieName}`)
     .then(function(response){
         return response.json()
     })
     .then(function(response){
         displayMovie(response)
-        return
     })
     .catch(function(error){
-        alert('Enter Valid Movie')
+
     })
   }
 
   function displayMovie(data){
+      console.log(data)
       const container =document.getElementById('container')
         container.innerHTML=""
 
-        var div1=document.createElement('div')
+        if(data.Title==undefined){
+            alert("Enter a valid movie")
+            let h1 = document.createElement('h1');
+            h1.textContent="Enter a valid Movie"
+            container.append(h1)
+        }
+                
+       else if(data.imdbRating>8.5){
+            
+            var rec=document.createElement('p')
+            rec.textContent='Recomanded'
+            rec.style.color="red"
+            rec.style.fontWeight="900"
+            rec.style.textAlign="Center"
+            var div1=document.createElement('div')
+            var img=document.createElement('img')
+            img.src=data.Poster
+            div1.append(rec,img)
+
+
+        var div2=document.createElement('div')
+        
+        var h3=document.createElement('h3')
+        h3.textContent=`Movie Name: ${data.Title}`
+        var p1 = document.createElement('p')
+        p1.textContent=`Release Year:: ${data.Year}`
+        var p2 = document.createElement('p')
+        p2.textContent=`Release Date:: ${data.Released}`
+        var p3 = document.createElement('p')
+        p3.textContent=`Rated by:: ${data.Rated}`
+        var p4 = document.createElement('p')
+        p4.textContent=`Playback Time :: ${data.Runtime}`
+        var p5 = document.createElement('p')
+        p5.textContent=`Director:: ${data.Director}`
+        var p6 = document.createElement('p')
+        p6.textContent=`Actors:: ${data.Actors}`
+        var p7 = document.createElement('p')
+        p7.textContent=`Language:: ${data.Language}`
+        var p8 = document.createElement('p')
+        p8.textContent=`Origin:: ${data.Country}`
+        var p9 = document.createElement('p')
+        p9.textContent=`Awards:: ${data.Awards}`
+        div2.append(h3,p1,p2,p3,p4,p5,p6,p7,p8,p9)
+
+      container.append(div1,div2)
+      container.style.display='flex'
+        }
+
+        else{
+            var div1=document.createElement('div')
         var img=document.createElement('img')
         img.src=data.Poster
         div1.append(img)
@@ -112,8 +161,14 @@
 
       container.append(div1,div2)
       container.style.display='flex'
+    
+        }
+            
+
       document.getElementById('searchBox').value=''
   }
+
+
 
  </script>
 </body>
